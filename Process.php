@@ -1,20 +1,30 @@
 <?php
+
+$dbServername = "localhost";
+$dbUsername = "root";
+$dbPassword = "";
+$dbName = "form_login";
+
+$conn = mysqli_connect($dbServername, $dbUsername, $dbPassword, $dbName);
+
 $Username=$_POST['Username'];
 $Password=$_POST['Password'];
 
 $Username = stripcslashes('Username');
 $Password = stripcslashes('Password');
-$Username = mysql_real_escape_string($Username);
-$Password = mysql_real_escape_string($Password);
 
-mysql_connect("localhost","root","");
-mysql_select_db("form_login");
+$sql="SELECT * FROM users WHERE user = '$Username' AND password = '$Password'";
 
-$resulf = mysql_query("select * rom users where Username = '$Username' and Password = '$Password'")
-or die ("Fail to query database ".mysql_error());
-$row = mysql_fetch_array($resulf);
-if($row['Username']==$Username && $row['Password']== $Password){
-    echo "Login Successfull -> Welcome ".$row['Username'];
+if ($result = mysqli_query($conn, $sql, MYSQLI_USE_RESULT)){
+    $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
+}
+else {
+    die ("Failed to query database!! ");
+}
+
+
+if($row['user']==$Username && $row['password']== $Password){
+    echo "Login Successfull -> Welcome ".$row['user'];
 }
 else{
     echo"Failed login try again";
